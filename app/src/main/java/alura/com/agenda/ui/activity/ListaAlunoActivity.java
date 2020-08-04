@@ -37,6 +37,7 @@ public class ListaAlunoActivity extends AppCompatActivity {
         dao.salvar(new Aluno("Najara", "19997622235", "najaranfblemos@gmail.com"));
     }
 
+    // Teste GIT
     private void configurarBotao() {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
