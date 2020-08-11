@@ -48,7 +48,6 @@ public class Aluno implements Serializable {
     }
 
 
-
     public void setId(int id) {
         this.id = id;
     }
