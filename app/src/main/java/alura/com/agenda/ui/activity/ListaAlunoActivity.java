@@ -2,11 +2,14 @@ package alura.com.agenda.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -63,23 +66,31 @@ public class ListaAlunoActivity extends AppCompatActivity {
         adapter.addAll(dao.todos());
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.menu_lista_alunos, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_lista_alunos_remover) {
+            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            Aluno aluno = adapter.getItem(menuInfo.position);
+            remove(aluno);
+        }
+        return super.onContextItemSelected(item);
+
+    }
+
     private void configuraLista() {
         ListView listView = findViewById(R.id.listView);
         configurarAdapter(listView);
         configurarItemSeleciona(listView);
-        configurarItemLongoSeleciona(listView);
+        registerForContextMenu(listView);
     }
 
-    private void configurarItemLongoSeleciona(ListView listView) {
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Aluno aluno = (Aluno) adapterView.getItemAtPosition(i);
-                remove(aluno);
-                return true;
-            }
-        });
-    }
 
     private void remove(Aluno aluno) {
         dao.remove(aluno);

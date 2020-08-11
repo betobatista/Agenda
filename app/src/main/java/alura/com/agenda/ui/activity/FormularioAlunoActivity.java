@@ -2,10 +2,14 @@ package alura.com.agenda.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import alura.com.agenda.R;
@@ -29,13 +33,27 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_aluno);
         inicializarCampos();
-        configurarBotao();
         carregaAluno();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_formulario_aluno, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_formulario_salvar) {
+            finalizaFormulario();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void carregaAluno() {
         Intent intent = getIntent();
-        if(intent.hasExtra(CHAVE_ALUNO)) {
+        if (intent.hasExtra(CHAVE_ALUNO)) {
             setTitle(ALUNO_EDITA);
             aluno = (Aluno) intent.getSerializableExtra(CHAVE_ALUNO);
             preencheCampos();
@@ -57,19 +75,10 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         campoEmail = findViewById(R.id.edt_aluno_email);
     }
 
-    private void configurarBotao() {
-        Button btnSalvar = findViewById(R.id.btn_aluno_salvar);
-        btnSalvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finalizaFormulario();
-            }
-        });
-    }
 
     private void finalizaFormulario() {
         preencherAluno();
-        if(aluno.temIdValido()){
+        if (aluno.temIdValido()) {
             dao.edita(aluno);
         } else {
             dao.salvar(aluno);
